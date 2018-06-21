@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/MultiSelectAutocomplete.iml" filepath="$PROJECT_DIR$/MultiSelectAutocomplete.iml" />
+      <module fileurl="file://$PROJECT_DIR$/multiselectautocomplete/multiselectautocomplete.iml" filepath="$PROJECT_DIR$/multiselectautocomplete/multiselectautocomplete.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
+    </modules>
+  </component>
+</project>
