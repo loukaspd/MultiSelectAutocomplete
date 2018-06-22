@@ -16,6 +16,7 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.MultiAutoCompleteTextView;
 
 import com.otaliastudios.autocomplete.Autocomplete;
 import com.otaliastudios.autocomplete.AutocompleteCallback;
@@ -28,7 +29,7 @@ import gr.loukaspd.multiselectautocomplete.Interfaces.IMultiSelectItem;
 import gr.loukaspd.multiselectautocomplete.Interfaces.IMultiSelectUi;
 
 public class MultiSelectAutocomplete<T extends IMultiSelectItem>
-        extends android.support.v7.widget.AppCompatAutoCompleteTextView
+        extends MultiAutoCompleteTextView
         implements AutocompleteCallback
 {
 
