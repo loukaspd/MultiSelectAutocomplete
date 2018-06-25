@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    compileSdkVersion 27
+    buildToolsVersion "28.0.0"
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
 
@@ -22,11 +22,35 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-
-    compile 'com.otaliastudios:autocomplete:1.1.0'
-    compile 'com.android.support:recyclerview-v7:+'
+    api 'com.otaliastudios:autocomplete:1.1.0'
+    api 'com.android.support:recyclerview-v7:27.1.1'
 }
+
+ext {
+    //For bintray and jcenter distribution
+    bintrayRepo = 'MultiSelectAutocomplete'
+    bintrayName = 'MultiSelectAutocomplete'
+
+    publishedGroupId = 'gr.loukaspd'
+    libraryName = 'MultiSelectAutocomplete'
+    artifact = 'multiselectautocomplete'
+
+    libraryDescription = 'EditText with Autocomplete Functionality that supports customizing how the items will be drawn'
+
+    siteUrl = 'https://github.com/loukaspd/MultiSelectAutocomplete'
+    gitUrl = 'https://github.com/loukaspd/MultiSelectAutocomplete.git'
+
+    libraryVersion = '1.0.0'
+
+    developerId = 'gr.loukaspd'
+    developerName = 'loukaspd'
+    developerEmail = 'loukaspd@gmail.com'
+    organization = ''
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+//These two remote files contain Bintray configuration
+apply from: 'https://raw.githubusercontent.com/quangctkm9207/template-files/master/android/gradle/install.gradle'
+apply from: 'https://raw.githubusercontent.com/quangctkm9207/template-files/master/android/gradle/bintray.gradle'
