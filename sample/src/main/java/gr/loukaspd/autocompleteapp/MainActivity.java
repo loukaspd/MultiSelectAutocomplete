@@ -12,12 +12,16 @@ import gr.loukaspd.multiselectautocomplete.Interfaces.IMultiSelectItem;
 import gr.loukaspd.multiselectautocomplete.MultiSelectAutocomplete;
 
 public class MainActivity extends AppCompatActivity {
+
+    MultiSelectAutocomplete input;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final MultiSelectAutocomplete input = (MultiSelectAutocomplete) findViewById(R.id.input);
+        input = (MultiSelectAutocomplete) findViewById(R.id.input);
 
         input.initialize(new MultiSelectUi(), getItems(), true);
 
@@ -38,11 +42,23 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.show_selected).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int items = input.getSelectedItems().size();
-                String text = String.format(Locale.ENGLISH, "found %d items%ntext:%s", items, input.getText().toString());
-                Toast.makeText(getBaseContext(), text, Toast.LENGTH_SHORT).show();
+                showSelectedItemsDesc();
             }
         });
+
+        input.setOnSelectedItemsChangedListener(new MultiSelectAutocomplete.OnSelectedItemsChangedListener() {
+            @Override
+            public void onSelectedItemsChanged() {
+                showSelectedItemsDesc();
+            }
+        });
+    }
+
+
+    private void showSelectedItemsDesc() {
+        int items = input.getSelectedItems().size();
+        String text = String.format(Locale.ENGLISH, "found %d items%ntext:%s", items, input.getText().toString());
+        Toast.makeText(getBaseContext(), text, Toast.LENGTH_SHORT).show();
     }
 
 

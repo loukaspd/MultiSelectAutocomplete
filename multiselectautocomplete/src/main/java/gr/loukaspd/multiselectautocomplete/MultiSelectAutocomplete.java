@@ -42,6 +42,7 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
 
     private IMultiSelectUi<T> _ui;
     private AutocompletePresenter<T> _presenter;
+    private OnSelectedItemsChangedListener _onSelectedItemsChanged;
     //endregion
 
     //region Constructors
@@ -89,6 +90,10 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
         initializeAutocomplete(items);
     }
 
+    /**
+     *
+     * @return a list with all selected items
+     */
     public ArrayList<T> getSelectedItems() {
         ArrayList<T> items = new ArrayList<>(_tagSpans.size());
         for(MultiSelectEditTextTagSpan<T> span : _tagSpans) {
@@ -96,6 +101,15 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
         }
 
         return items;
+    }
+
+    /**
+     *
+     * @return the first selected item or null
+     */
+    public T getSelectedItem() {
+        if (_tagSpans.size() < 1) return null;
+        return _tagSpans.get(0).getItem();
     }
 
 
@@ -145,6 +159,11 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
     public void setAutocompleteItems(ArrayList<T> items) {
         clear();
         _presenter.setItems(items);
+    }
+
+
+    public void setOnSelectedItemsChangedListener(OnSelectedItemsChangedListener listener) {
+        _onSelectedItemsChanged = listener;
     }
 
     //endregion
@@ -220,6 +239,10 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
         _tagSpans.add(span);
 
         updateText();
+
+        if (_onSelectedItemsChanged != null) {
+            _onSelectedItemsChanged.onSelectedItemsChanged();
+        }
     }
 
     private void updateText() {
@@ -318,6 +341,10 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
 
         _presenter.addItem(span.getItem());         //show item in as autocomplete option
         toggleEnabled(true);                       // can add more items (if not multiple)
+
+        if (_onSelectedItemsChanged != null) {
+            _onSelectedItemsChanged.onSelectedItemsChanged();
+        }
     }
 
     //endregion
@@ -397,6 +424,14 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
             _lastString = str.toString();
         }
     };
+
+    //endregion
+
+    //region OnSelectedItemsChangedListener
+
+    public interface OnSelectedItemsChangedListener {
+        void onSelectedItemsChanged();
+    }
 
     //endregion
 }
