@@ -15,10 +15,28 @@
 
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/replace"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="check value"
+        android:text="Replace Items"
+        android:layout_marginTop="10dp"
+        />
+
+
+    <Button
+        android:id="@+id/set_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set Item"
+        android:layout_marginTop="10dp"
+        />
+
+
+    <Button
+        android:id="@+id/show_selected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Selected"
         android:layout_marginTop="10dp"
         />
 

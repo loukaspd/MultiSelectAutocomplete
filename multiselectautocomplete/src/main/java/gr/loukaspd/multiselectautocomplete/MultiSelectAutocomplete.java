@@ -78,7 +78,7 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
 
     /**
      * Initialize the View
-     * @param ui customize how to items will be drawn
+     * @param ui customize how items will be drawn
      * @param items the items that will be available for selection
      * @param supportMultiple can it support multiple items selected
      */
@@ -96,6 +96,55 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
         }
 
         return items;
+    }
+
+
+    /**
+     * Add item as Selected. This will replace the current selected Item if it's not multiple
+     * @param item the item to add as selected
+     */
+    public void addSelectedItem(T item) {
+        if (!_isMultiple) {
+            _tagSpans.clear();
+        }
+        addItem(item);
+    }
+
+
+    /**
+     * Remove the specified item if it's selected
+     * @param item the item to remove if it's selected
+     * @return if the item was found
+     */
+    public boolean removeSelectedItem(T item) {
+        for(int i=0; i<_tagSpans.size(); i++) {
+            MultiSelectEditTextTagSpan<T> span = _tagSpans.get(i);
+            if (span.getItem() == item) {
+                _tagSpans.remove(i);
+                updateText();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Remove all (selected) tags from EditText
+     */
+    public void clear() {
+        _tagSpans.clear();
+        updateText();
+    }
+
+
+    /**
+     * Set the items that will be available for selection. This will clear currently selected items.
+     * @param items which will be available for selection
+     */
+    public void setAutocompleteItems(ArrayList<T> items) {
+        clear();
+        _presenter.setItems(items);
     }
 
     //endregion

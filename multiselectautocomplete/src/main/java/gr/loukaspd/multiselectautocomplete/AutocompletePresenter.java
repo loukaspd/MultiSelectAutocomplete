@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.otaliastudios.autocomplete.RecyclerViewPresenter;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import gr.loukaspd.multiselectautocomplete.Interfaces.IMultiSelectItem;
@@ -27,6 +28,10 @@ class AutocompletePresenter<T extends IMultiSelectItem>
 
     public void addItem(T item) {
         _adapter.addItem(item);
+    }
+
+    public void setItems(ArrayList<T> items) {
+        _adapter.setItems(items);
     }
 
 

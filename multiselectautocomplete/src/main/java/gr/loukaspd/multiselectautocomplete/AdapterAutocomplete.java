@@ -16,7 +16,7 @@ class AdapterAutocomplete<T extends IMultiSelectItem>
     //region Properties
 
     private final OnItemClicked<T> _onItemClicked;
-    private final ArrayList<T> _items;
+    private ArrayList<T> _items;
     private ArrayList<T> _currentItems;
     private String _filter;
 
@@ -46,6 +46,11 @@ class AdapterAutocomplete<T extends IMultiSelectItem>
 
     public void addItem(T item) {
         _items.add(item);
+        applyFiltering(_filter);
+    }
+
+    public void setItems(ArrayList<T> items) {
+        _items = items;
         applyFiltering(_filter);
     }
 

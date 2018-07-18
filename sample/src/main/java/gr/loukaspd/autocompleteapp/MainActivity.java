@@ -21,9 +21,23 @@ public class MainActivity extends AppCompatActivity {
 
         input.initialize(new MultiSelectUi(), getItems(), true);
 
-        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.replace).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                input.setAutocompleteItems(getWrongItems());
+            }
+        });
+
+        findViewById(R.id.set_item).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                input.addSelectedItem(new AutocompleteItem("Red", "#FF0000"));
+            }
+        });
+
+        findViewById(R.id.show_selected).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 int items = input.getSelectedItems().size();
                 String text = String.format(Locale.ENGLISH, "found %d items%ntext:%s", items, input.getText().toString());
                 Toast.makeText(getBaseContext(), text, Toast.LENGTH_SHORT).show();
@@ -39,6 +53,18 @@ public class MainActivity extends AppCompatActivity {
         items.add(new AutocompleteItem("Blue", "#0000FF"));
         items.add(new AutocompleteItem("Black", "#000000"));
         items.add(new AutocompleteItem("White", "#FFFFFF"));
+
+        return items;
+    }
+
+
+    private ArrayList<IMultiSelectItem> getWrongItems() {
+        ArrayList<IMultiSelectItem> items = new ArrayList<>();
+        items.add(new AutocompleteItem("Green", "#FF0000"));
+        items.add(new AutocompleteItem("Red", "#00FF00"));
+        items.add(new AutocompleteItem("Black", "#0000FF"));
+        items.add(new AutocompleteItem("White", "#000000"));
+        items.add(new AutocompleteItem("Blue", "#FFFFFF"));
 
         return items;
     }
