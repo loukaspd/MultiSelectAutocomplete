@@ -136,6 +136,7 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
             if (span.getItem() == item) {
                 _tagSpans.remove(i);
                 updateText();
+                toggleEnabled(true);
                 return true;
             }
         }
@@ -149,6 +150,7 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
     public void clear() {
         _tagSpans.clear();
         updateText();
+        toggleEnabled(true);
     }
 
 
