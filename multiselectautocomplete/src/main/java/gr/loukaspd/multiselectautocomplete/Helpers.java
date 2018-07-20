@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import java.util.ArrayList;
+
 class Helpers {
 
     public static final String TAG = "MultiselectAutocomplete";
@@ -30,5 +32,12 @@ class Helpers {
         editText.requestFocus();
         InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    public static <T> ArrayList<T> cloneList(ArrayList<T> list) {
+        ArrayList<T> result = new ArrayList<>();
+        result.addAll(list);
+
+        return result;
     }
 }

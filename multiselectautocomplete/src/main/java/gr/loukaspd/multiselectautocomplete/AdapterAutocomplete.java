@@ -29,7 +29,7 @@ class AdapterAutocomplete<T extends IMultiSelectItem>
     public AdapterAutocomplete(IMultiSelectUi<T> ui, ArrayList<T> items, OnItemClicked<T> onItemClicked) {
         _ui = ui;
         _onItemClicked = onItemClicked;
-        _items = items;
+        _items = Helpers.cloneList(items);
 
         applyFiltering(null);
     }
@@ -40,17 +40,18 @@ class AdapterAutocomplete<T extends IMultiSelectItem>
     }
 
     public void removeItem(T item) {
-        _items.remove(item);
+        if (!_items.remove(item)) return;
         applyFiltering(_filter);
     }
 
     public void addItem(T item) {
+        if (_items.contains(item)) return;
         _items.add(item);
         applyFiltering(_filter);
     }
 
     public void setItems(ArrayList<T> items) {
-        _items = items;
+        _items = Helpers.cloneList(items);
         applyFiltering(_filter);
     }
 

@@ -40,7 +40,7 @@ ext {
     siteUrl = 'https://github.com/loukaspd/MultiSelectAutocomplete'
     gitUrl = 'https://github.com/loukaspd/MultiSelectAutocomplete.git'
 
-    libraryVersion = '1.0.2'
+    libraryVersion = '1.0.3'
 
     developerId = 'gr.loukaspd'
     developerName = 'loukaspd'
