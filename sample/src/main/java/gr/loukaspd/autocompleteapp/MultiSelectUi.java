@@ -12,6 +12,11 @@ import gr.loukaspd.multiselectautocomplete.Interfaces.IMultiSelectUi;
 public class MultiSelectUi implements IMultiSelectUi<AutocompleteItem> {
 
     @Override
+    public String getItemText(AutocompleteItem item) {
+        return item.Text;
+    }
+
+    @Override
     public int autocompleteLayoutRes() {
         return R.layout.item_autocomplete;
     }
@@ -36,11 +41,7 @@ public class MultiSelectUi implements IMultiSelectUi<AutocompleteItem> {
         TextView textView = rootView.findViewById(R.id.tv);
         ImageView color = rootView.findViewById(R.id.iv);
 
-        textView.setText(item.getText());
-        //TODO(L)
-        AutocompleteItem myItem = (item instanceof AutocompleteItem ? (AutocompleteItem)item : null);
-        if (myItem != null) {
-            color.getDrawable().setColorFilter(Color.parseColor(myItem.Color), PorterDuff.Mode.SRC_ATOP);
-        }
+        textView.setText(item.Text);
+        color.getDrawable().setColorFilter(Color.parseColor(item.Color), PorterDuff.Mode.SRC_ATOP);
     }
 }

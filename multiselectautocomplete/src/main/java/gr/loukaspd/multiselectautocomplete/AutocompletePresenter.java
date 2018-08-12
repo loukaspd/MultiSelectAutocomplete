@@ -5,13 +5,11 @@ import android.support.annotation.Nullable;
 
 import com.otaliastudios.autocomplete.RecyclerViewPresenter;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-import gr.loukaspd.multiselectautocomplete.Interfaces.IMultiSelectItem;
 import gr.loukaspd.multiselectautocomplete.Interfaces.IMultiSelectUi;
 
-class AutocompletePresenter<T extends IMultiSelectItem>
+class AutocompletePresenter<T>
         extends RecyclerViewPresenter
         implements AdapterAutocomplete.OnItemClicked<T>
 {
@@ -19,7 +17,7 @@ class AutocompletePresenter<T extends IMultiSelectItem>
 
     AutocompletePresenter(Context context, IMultiSelectUi<T> ui, ArrayList<T> items){
         super(context);
-        _adapter = new AdapterAutocomplete<>(ui, items, this);
+        _adapter = new AdapterAutocomplete<T>(ui, items, this);
     }
 
     public void removeItem(T item) {

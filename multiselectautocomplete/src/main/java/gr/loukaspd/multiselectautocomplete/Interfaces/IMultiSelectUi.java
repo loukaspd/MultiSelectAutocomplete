@@ -2,7 +2,14 @@ package gr.loukaspd.multiselectautocomplete.Interfaces;
 
 import android.view.View;
 
-public interface IMultiSelectUi<T extends IMultiSelectItem>  {
+public interface IMultiSelectUi<T>  {
+
+    /**
+     * Gives the text out of an item
+     * @param item
+     * @return
+     */
+    String getItemText(T item);
 
     /**
      * Layout file that will be used to inflate the autocomplete items

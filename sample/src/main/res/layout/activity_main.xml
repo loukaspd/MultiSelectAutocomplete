@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         custom:supportMultiple="true"
         custom:showOptionsOnFocus="true"
+        custom:clearUnmatchedText="true"
         />
 
 

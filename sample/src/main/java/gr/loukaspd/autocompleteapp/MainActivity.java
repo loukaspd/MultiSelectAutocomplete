@@ -8,14 +8,12 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import gr.loukaspd.multiselectautocomplete.Interfaces.IMultiSelectItem;
-import gr.loukaspd.multiselectautocomplete.Interfaces.IMultiSelectUi;
 import gr.loukaspd.multiselectautocomplete.MultiSelectAutocomplete;
 
 public class MainActivity extends AppCompatActivity {
 
     MultiSelectAutocomplete input;
-    ArrayList<IMultiSelectItem> items;
+    ArrayList<AutocompleteItem> items;
 
 
     @Override
@@ -65,8 +63,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private ArrayList<IMultiSelectItem> getItems() {
-        ArrayList<IMultiSelectItem> items = new ArrayList<>();
+    private ArrayList<AutocompleteItem> getItems() {
+        ArrayList<AutocompleteItem> items = new ArrayList<>();
         items.add(new AutocompleteItem("Red", "#FF0000"));
         items.add(new AutocompleteItem("Green", "#00FF00"));
         items.add(new AutocompleteItem("Blue", "#0000FF"));
@@ -77,8 +75,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private ArrayList<IMultiSelectItem> getWrongItems() {
-        ArrayList<IMultiSelectItem> items = new ArrayList<>();
+    private ArrayList<AutocompleteItem> getWrongItems() {
+        ArrayList<AutocompleteItem> items = new ArrayList<>();
         items.add(new AutocompleteItem("Green", "#FF0000"));
         items.add(new AutocompleteItem("Red", "#00FF00"));
         items.add(new AutocompleteItem("Black", "#0000FF"));

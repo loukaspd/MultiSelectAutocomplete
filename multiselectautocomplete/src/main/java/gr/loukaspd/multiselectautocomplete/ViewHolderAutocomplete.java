@@ -3,9 +3,7 @@ package gr.loukaspd.multiselectautocomplete;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import gr.loukaspd.multiselectautocomplete.Interfaces.IMultiSelectItem;
-
-class ViewHolderAutocomplete<T extends IMultiSelectItem>
+class ViewHolderAutocomplete<T>
         extends RecyclerView.ViewHolder
 {
     private final View _rootView;

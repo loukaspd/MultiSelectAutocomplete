@@ -3,13 +3,12 @@ package gr.loukaspd.multiselectautocomplete;
 import android.graphics.drawable.Drawable;
 import android.text.style.ImageSpan;
 
-import gr.loukaspd.multiselectautocomplete.Interfaces.IMultiSelectItem;
-
-class MultiSelectEditTextTagSpan<T extends IMultiSelectItem>
+class MultiSelectEditTextTagSpan<T>
         extends ImageSpan
 {
     public MultiSelectEditTextTagSpan(Drawable d, String source) {
         super(d, source);
+        this.length = source.length();
     }
 
     /**
@@ -23,16 +22,14 @@ class MultiSelectEditTextTagSpan<T extends IMultiSelectItem>
     private int position;
 
     /**
+     * the length of the string
+     */
+    private int length;
+
+    /**
      * The Item it represents
      */
     private T item;
-
-    /**
-     * @return the text of the item inside the Span
-     */
-    public String getItemText() {
-        return item == null ? null : item.getText();
-    }
 
 
     //region Getters - Setters
@@ -63,6 +60,8 @@ class MultiSelectEditTextTagSpan<T extends IMultiSelectItem>
     public void setIndex(int index) {
         this.index = index;
     }
+
+    public int getLength() { return length; }
 
 
     //endregion

@@ -27,10 +27,9 @@ import com.otaliastudios.autocomplete.AutocompletePolicy;
 import java.util.ArrayList;
 import java.util.List;
 
-import gr.loukaspd.multiselectautocomplete.Interfaces.IMultiSelectItem;
 import gr.loukaspd.multiselectautocomplete.Interfaces.IMultiSelectUi;
 
-public class MultiSelectAutocomplete<T extends IMultiSelectItem>
+public class MultiSelectAutocomplete<T>
         extends MultiAutoCompleteTextView
         implements AutocompleteCallback
 {
@@ -257,7 +256,7 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
         bd.setBounds(0, 0, bd.getIntrinsicWidth(), bd.getIntrinsicHeight());
 
         // Initialize the span
-        final MultiSelectEditTextTagSpan span = new MultiSelectEditTextTagSpan(bd, item.getText());
+        final MultiSelectEditTextTagSpan span = new MultiSelectEditTextTagSpan(bd, _ui.getItemText(item));
         span.setItem(item);
         // Set span position - index
         int spansSize = _tagSpans.size();
@@ -270,7 +269,7 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
             span.setIndex(spansSize);
 
             MultiSelectEditTextTagSpan lastSpan = _tagSpans.get(_tagSpans.size()-1);
-            span.setPosition(lastSpan.getPosition() + lastSpan.getItemText().length() + 1);
+            span.setPosition(lastSpan.getPosition() + lastSpan.getLength() + 1);
         }
         _tagSpans.add(span);
 

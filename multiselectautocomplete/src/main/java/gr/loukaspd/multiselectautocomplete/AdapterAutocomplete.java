@@ -7,10 +7,9 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-import gr.loukaspd.multiselectautocomplete.Interfaces.IMultiSelectItem;
 import gr.loukaspd.multiselectautocomplete.Interfaces.IMultiSelectUi;
 
-class AdapterAutocomplete<T extends IMultiSelectItem>
+class AdapterAutocomplete<T>
         extends android.support.v7.widget.RecyclerView.Adapter
 {
     //region Properties
@@ -102,7 +101,7 @@ class AdapterAutocomplete<T extends IMultiSelectItem>
     private void applyFiltering(String filter) {
         _currentItems = new ArrayList<>();
         for(T item : _items) {
-            if (filter == null || item.getText().toLowerCase().contains(filter.toLowerCase())) {
+            if (filter == null || _ui.getItemText(item).toLowerCase().contains(filter.toLowerCase())) {
                 _currentItems.add(item);
             }
         }
@@ -112,7 +111,7 @@ class AdapterAutocomplete<T extends IMultiSelectItem>
 
     //endregion
 
-    interface OnItemClicked<T extends IMultiSelectItem> {
+    interface OnItemClicked<T> {
         void onClick(T item);
     }
 }
