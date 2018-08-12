@@ -2,5 +2,6 @@
     <declare-styleable name="MultiSelectAutocomplete">
         <attr name="supportMultiple" format="boolean" />
         <attr name="showOptionsOnFocus" format="boolean" />
+        <attr name="clearUnmatchedText" format="boolean" />
     </declare-styleable>
 </resources>

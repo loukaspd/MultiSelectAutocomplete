@@ -38,15 +38,20 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
     //region Settings
     private boolean _supportMultiple = false;
     private boolean _showOptionsOnFocus = false;
+    private boolean _clearUnmatchedText = false;
 
     //Setters
 
-    public void setSupportMultiple(boolean _supportMultiple) {
-        this._supportMultiple = _supportMultiple;
+    public void setSupportMultiple(boolean supportMultiple) {
+        _supportMultiple = supportMultiple;
     }
 
-    public void setShowOptionsOnFocus(boolean _showOptionsOnFocus) {
-        this._showOptionsOnFocus = _showOptionsOnFocus;
+    public void setShowOptionsOnFocus(boolean showOptionsOnFocus) {
+        _showOptionsOnFocus = showOptionsOnFocus;
+    }
+
+    public void setClearUnmatchedText(boolean clearUnmatchedText) {
+        _clearUnmatchedText = clearUnmatchedText;
     }
     //endregion
 
@@ -93,11 +98,13 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
     protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
 
+        // On Focus
         if (focused) {
-            // On Focus
             if (_showOptionsOnFocus && _autocomplete != null) {
                 _autocomplete.showPopup(_query);
             }
+        }else {
+            if (_clearUnmatchedText) clearUnmatchedText();
         }
     }
 
@@ -305,6 +312,10 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
         }
     }
 
+    private void clearUnmatchedText() {
+        updateText();
+    }
+
     //endregion
 
     //region AutocompleteCallback
@@ -418,6 +429,7 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
         try {
             _supportMultiple = a.getBoolean(R.styleable.MultiSelectAutocomplete_supportMultiple, false);
             _showOptionsOnFocus = a.getBoolean(R.styleable.MultiSelectAutocomplete_showOptionsOnFocus, false);
+            _clearUnmatchedText = a.getBoolean(R.styleable.MultiSelectAutocomplete_clearUnmatchedText, false);
         } finally {
             a.recycle();
         }
