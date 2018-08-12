@@ -5,7 +5,7 @@ import android.view.View;
 public interface IMultiSelectUi<T>  {
 
     /**
-     * Gives the text out of an item
+     * Extract the text from an item
      * @param item
      * @return
      */

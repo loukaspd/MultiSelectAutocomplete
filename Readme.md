@@ -15,19 +15,21 @@ This library uses the [Autocomplete library](https://github.com/natario1/Autocom
 
 ## Usage
 1. include `<gr.loukaspd.multiselectautocomplete.MultiSelectAutocomplete>` element in your layout file instead on EditText
-2. Stup the Autocomplete Element by calling `input.initialize(IMultiSelectUi, ArrayList<IMultiSelectItem>, supportMultiple)`
-
-
-### IMultiSelectItem
-
-The class of the items that will populate the MultiSelectAutocomplete must implement this Interface, which exposes the `String getText();` method
+2. Stup the Autocomplete Element by calling `input.initialize(IMultiSelectUi, ArrayList<T>, supportMultiple)`
 
 ### IMultiSelectUi
 
 This is an interface that controls how to draw the items inside the AutocompleteDropdown and the selected items inside the EditText
 
 ```java
-public interface IMultiSelectUi<T extends IMultiSelectItem>  {
+public interface IMultiSelectUi<T>  {
+
+    /**
+     * Extract the text from an item
+     * @param item
+     * @return
+     */
+    String getItemText(T item);
 
     /**
      * Layout file that will be used to inflate the autocomplete items
@@ -59,6 +61,7 @@ public interface IMultiSelectUi<T extends IMultiSelectItem>  {
 }
 ```
 
+- `getItemText()`: returns the text representation from an item, used for filtering autocomplete items
 - `autocompleteLayoutRes()`: returns the resource id of the layout file that will be used to draw the items inside the autocomplete dialog
 - `autocompleteUpdateView(View rootView, T item)`: update the view with data from the specified item inside the autocomplete dialog
 - `selectedItemLayoutRes()`: returns the resource id of the layout file that will be used to draw the selected items inside the EditText
