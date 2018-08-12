@@ -1,8 +1,10 @@
 package gr.loukaspd.multiselectautocomplete;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -33,13 +35,28 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
         implements AutocompleteCallback
 {
 
-    //region Class Variables
-    private boolean _isMultiple = false;
+    //region Settings
+    private boolean _supportMultiple = false;
+    private boolean _showOptionsOnFocus = false;
 
+    //Setters
+
+    public void setSupportMultiple(boolean _supportMultiple) {
+        this._supportMultiple = _supportMultiple;
+    }
+
+    public void setShowOptionsOnFocus(boolean _showOptionsOnFocus) {
+        this._showOptionsOnFocus = _showOptionsOnFocus;
+    }
+    //endregion
+
+    //region Class Variables
     private final List<MultiSelectEditTextTagSpan<T>> _tagSpans = new ArrayList<>();
     private String _lastString = "";
     private boolean _isAfterTextWatcherEnabled = true;
+    private CharSequence _query = "";
 
+    private Autocomplete _autocomplete;
     private IMultiSelectUi<T> _ui;
     private AutocompletePresenter<T> _presenter;
     private OnSelectedItemsChangedListener _onSelectedItemsChanged;
@@ -49,17 +66,17 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
 
     public MultiSelectAutocomplete(Context context) {
         super(context);
-        init();
+        init(context, null);
     }
 
     public MultiSelectAutocomplete(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(context, attrs);
     }
 
     public MultiSelectAutocomplete(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(context, attrs);
     }
 
     //endregion
@@ -72,6 +89,19 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
         setSelection(this.length());
     }
 
+    @Override
+    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
+        super.onFocusChanged(focused, direction, previouslyFocusedRect);
+
+        if (focused) {
+            // On Focus
+            if (_showOptionsOnFocus && _autocomplete != null) {
+                _autocomplete.showPopup(_query);
+            }
+        }
+    }
+
+
 
     //endregion
 
@@ -81,11 +111,9 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
      * Initialize the View
      * @param ui customize how items will be drawn
      * @param items the items that will be available for selection
-     * @param supportMultiple can it support multiple items selected
      */
-    public void initialize(IMultiSelectUi<T> ui, ArrayList<T> items, boolean supportMultiple) {
+    public void initialize(IMultiSelectUi<T> ui, ArrayList<T> items) {
         _ui = ui;
-        _isMultiple = supportMultiple;
 
         initializeAutocomplete(items);
     }
@@ -118,7 +146,7 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
      * @param item the item to add as selected
      */
     public void addSelectedItem(T item) {
-        if (!_isMultiple) {
+        if (!_supportMultiple) {
             _tagSpans.clear();
         }
         addItem(item);
@@ -175,8 +203,7 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
     private void initializeAutocomplete(ArrayList<T> items) {
         _presenter = new AutocompletePresenter<>(this.getContext(), _ui, items);
 
-
-        Autocomplete autocomplete = Autocomplete.on(this)
+        _autocomplete = Autocomplete.on(this)
                 .with(new AutocompletePolicy() {
                     @Override
                     public boolean shouldShowPopup(Spannable text, int cursorPos) {
@@ -191,17 +218,17 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
                     @Override
                     public CharSequence getQuery(Spannable text) {
                         MultiSelectEditTextTagSpan[] spans = text.getSpans(0,text.length(),MultiSelectEditTextTagSpan.class);
-                        CharSequence query = text.toString();
+                        _query = text.toString();
                         for(MultiSelectEditTextTagSpan span : spans) {
                             int charsToRemove = span.getSource().length() + 1;
-                            if (charsToRemove > query.length()) {
-                                query = "";
+                            if (charsToRemove > _query.length()) {
+                                _query = "";
                             }
                             else {
-                                query = query.subSequence(charsToRemove, query.length());
+                                _query = _query.subSequence(charsToRemove, _query.length());
                             }
                         }
-                        return query;
+                        return _query;
                     }
 
                     @Override
@@ -213,7 +240,7 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
                 .with(this)
                 .build();
 
-        autocomplete.setGravity(Gravity.END);
+        _autocomplete.setGravity(Gravity.END);
     }
 
     void addItem(T item) {
@@ -265,7 +292,7 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
     }
 
     private void toggleEnabled(boolean enabled) {
-        if (_isMultiple) return;
+        if (_supportMultiple) return;
 
         if (!enabled) {
             Helpers.releaseFocus(this);
@@ -381,7 +408,21 @@ public class MultiSelectAutocomplete<T extends IMultiSelectItem>
 
     //region TextWatcher for Deletion
 
-    private void init() {
+    private void init(Context context, AttributeSet attrs) {
+        // Read Settings
+        TypedArray a = context.getTheme().obtainStyledAttributes(
+                attrs,
+                R.styleable.MultiSelectAutocomplete,
+                0, 0);
+
+        try {
+            _supportMultiple = a.getBoolean(R.styleable.MultiSelectAutocomplete_supportMultiple, false);
+            _showOptionsOnFocus = a.getBoolean(R.styleable.MultiSelectAutocomplete_showOptionsOnFocus, false);
+        } finally {
+            a.recycle();
+        }
+
+        // register textWatcher
         ViewTreeObserver viewTreeObserver = getViewTreeObserver();
         if (viewTreeObserver.isAlive()) {
             viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {

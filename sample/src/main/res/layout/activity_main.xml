@@ -5,12 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center">
+    android:gravity="center"
+    xmlns:custom="http://schemas.android.com/apk/res-auto">
 
     <gr.loukaspd.multiselectautocomplete.MultiSelectAutocomplete
         android:id="@+id/input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        custom:supportMultiple="true"
+        custom:showOptionsOnFocus="true"
         />
 
 

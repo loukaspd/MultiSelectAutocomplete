@@ -1,0 +1,6 @@
+<resources>
+    <declare-styleable name="MultiSelectAutocomplete">
+        <attr name="supportMultiple" format="boolean" />
+        <attr name="showOptionsOnFocus" format="boolean" />
+    </declare-styleable>
+</resources>

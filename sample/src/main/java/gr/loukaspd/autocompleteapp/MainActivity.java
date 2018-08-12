@@ -9,11 +9,13 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import gr.loukaspd.multiselectautocomplete.Interfaces.IMultiSelectItem;
+import gr.loukaspd.multiselectautocomplete.Interfaces.IMultiSelectUi;
 import gr.loukaspd.multiselectautocomplete.MultiSelectAutocomplete;
 
 public class MainActivity extends AppCompatActivity {
 
     MultiSelectAutocomplete input;
+    ArrayList<IMultiSelectItem> items;
 
 
     @Override
@@ -23,7 +25,8 @@ public class MainActivity extends AppCompatActivity {
 
         input = (MultiSelectAutocomplete) findViewById(R.id.input);
 
-        input.initialize(new MultiSelectUi(), getItems(), true);
+        items = getItems();
+        input.initialize(new MultiSelectUi(), items);
 
         findViewById(R.id.replace).setOnClickListener(new View.OnClickListener() {
             @Override
