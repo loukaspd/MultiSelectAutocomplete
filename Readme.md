@@ -3,7 +3,7 @@
 EditText with Autocomplete Functionality based on [Autocomplete library](https://github.com/natario1/Autocomplete) that supports customizing how the items will be drawn and Multiple selected items
 
 ```
-    implementation 'gr.loukaspd:multiselectautocomplete:1.2.0'
+    implementation 'gr.loukaspd:multiselectautocomplete:1.2.1'
     implementation 'com.otaliastudios:autocomplete:1.1.0'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
 ```
@@ -15,7 +15,7 @@ This library uses the [Autocomplete library](https://github.com/natario1/Autocom
 
 ## Usage
 1. include `<gr.loukaspd.multiselectautocomplete.MultiSelectAutocomplete>` element in your layout file instead on EditText
-2. Stup the Autocomplete Element by calling `input.initialize(IMultiSelectUi, ArrayList<T>, supportMultiple)`
+2. Stup the Autocomplete Element by calling `input.initialize(IMultiSelectUi, ArrayList<T>)`
 
 ### IMultiSelectUi
 
@@ -67,3 +67,13 @@ public interface IMultiSelectUi<T>  {
 - `selectedItemLayoutRes()`: returns the resource id of the layout file that will be used to draw the selected items inside the EditText
 - `selectedItemUpdateView(View rootView, T item)`: update the view with data from the specified item inside the EditText
 
+
+### Attributes
+
+You can change view attributes directly from your layout's xml file or in your java/kotlin code:
+
+| Variable                   | XML Attribute              | Type      | Description                                                                            |
+| :------------------------- | :------------------------- | :-------- | :--------------------------------------------------------------------------------------|
+| supportMultiple                 | supportMultiple             | boolean     | if EditText can have multiple selected items |
+| showOptionsOnFocus         | showOptionsOnFocus     | boolean     | show the popup with autocomplete options when EditText gets focus                                        |
+| clearUnmatchedText         | clearUnmatchedText     | boolean     | clear all text that is not matched when EditText loses focus                                        |

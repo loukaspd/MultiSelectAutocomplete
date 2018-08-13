@@ -213,7 +213,7 @@ public class MultiSelectAutocomplete<T>
                 .with(new AutocompletePolicy() {
                     @Override
                     public boolean shouldShowPopup(Spannable text, int cursorPos) {
-                        return getQuery(text).length() > 0;
+                        return _showOptionsOnFocus ? true : getQuery(text).length() > 0;
                     }
 
                     @Override
@@ -322,6 +322,14 @@ public class MultiSelectAutocomplete<T>
     @Override
     public boolean onPopupItemClicked(Editable editable, Object item) {
         addItem((T)item);
+        if (_supportMultiple && _showOptionsOnFocus) {
+            this.post(new Runnable() {
+                @Override
+                public void run() {
+                    _autocomplete.showPopup("");
+                }
+            });
+        }
         return true;
     }
 
