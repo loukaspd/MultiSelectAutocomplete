@@ -3,7 +3,7 @@
 EditText with Autocomplete Functionality based on [Autocomplete library](https://github.com/natario1/Autocomplete) that supports customizing how the items will be drawn and Multiple selected items
 
 ```
-    implementation 'gr.loukaspd:multiselectautocomplete:1.2.1'
+    implementation 'gr.loukaspd:multiselectautocomplete:1.2.2'
     implementation 'com.otaliastudios:autocomplete:1.1.0'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
 ```
