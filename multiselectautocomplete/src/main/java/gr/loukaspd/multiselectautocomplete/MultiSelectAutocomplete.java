@@ -81,6 +81,7 @@ public class MultiSelectAutocomplete<T>
     private String _lastString = "";
     private boolean _isAfterTextWatcherEnabled = true;
     private CharSequence _query = "";
+    private boolean _enabled = true;
 
     private Autocomplete _autocomplete;
     private IMultiSelectUi<T> _ui;
@@ -121,11 +122,12 @@ public class MultiSelectAutocomplete<T>
 
         // On Focus
         if (focused) {
-            if (_showOptionsOnFocus && _autocomplete != null) {
+            if (_enabled && _showOptionsOnFocus && _autocomplete != null) {
                 _autocomplete.showPopup(_query);
             }
         }else {
             if (_clearUnmatchedText) clearUnmatchedText();
+            _autocomplete.dismissPopup();
         }
     }
 
@@ -240,7 +242,7 @@ public class MultiSelectAutocomplete<T>
                 .with(new AutocompletePolicy() {
                     @Override
                     public boolean shouldShowPopup(Spannable text, int cursorPos) {
-                        return _showOptionsOnFocus ? true : getQuery(text).length() > 0;
+                        return (_showOptionsOnFocus && _enabled) ? true : getQuery(text).length() > 0;
                     }
 
                     @Override
@@ -326,6 +328,8 @@ public class MultiSelectAutocomplete<T>
 
     private void toggleEnabled(boolean enabled) {
         if (_supportMultiple) return;
+
+        _enabled = enabled;
 
         if (!enabled) {
             Helpers.releaseFocus(this);
