@@ -15,6 +15,8 @@
         custom:supportMultiple="true"
         custom:showOptionsOnFocus="true"
         custom:clearUnmatchedText="true"
+        custom:popupElevation="6"
+        custom:popupWidth="600px"
         />
 
 

@@ -14,6 +14,12 @@ class AutocompletePresenter<T>
         implements AdapterAutocomplete.OnItemClicked<T>
 {
     private AdapterAutocomplete<T> _adapter;
+    private PopupDimensions _popupDimensions = null;
+
+    @Override
+    protected PopupDimensions getPopupDimensions() {
+        return _popupDimensions != null ? _popupDimensions : super.getPopupDimensions();
+    }
 
     AutocompletePresenter(Context context, IMultiSelectUi<T> ui, ArrayList<T> items){
         super(context);
@@ -30,6 +36,10 @@ class AutocompletePresenter<T>
 
     public void setItems(ArrayList<T> items) {
         _adapter.setItems(items);
+    }
+
+    public void setPopupDimensions(PopupDimensions popupDimensions) {
+        _popupDimensions = popupDimensions;
     }
 
 

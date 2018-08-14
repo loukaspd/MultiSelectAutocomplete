@@ -68,7 +68,7 @@ public interface IMultiSelectUi<T>  {
 - `selectedItemUpdateView(View rootView, T item)`: update the view with data from the specified item inside the EditText
 
 
-### Attributes
+### XML Attributes
 
 You can change view attributes directly from your layout's xml file or in your java/kotlin code:
 
@@ -77,3 +77,13 @@ You can change view attributes directly from your layout's xml file or in your j
 | supportMultiple                 | supportMultiple             | boolean     | if EditText can have multiple selected items |
 | showOptionsOnFocus         | showOptionsOnFocus     | boolean     | show the popup with autocomplete options when EditText gets focus                                        |
 | clearUnmatchedText         | clearUnmatchedText     | boolean     | clear all text that is not matched when EditText loses focus                                        |
+| popupElevation         | popupElevation     | float     | sets the elevtion of the autocomplete popup                                        |
+| popupWidth         | popupWidth     | dimension     | set the width of the autocomplete popup window                                        |
+| popupHeight        | popupHeight     | dimension     | set the height of the autocomplete popup window                                        |
+
+
+### Programmatic Attributes
+
+These must be set before calling the initialize method
+
+- `setPopupBackground(Drawable drawable)`: set the background of the autocomplete popup window

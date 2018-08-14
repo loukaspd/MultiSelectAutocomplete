@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.otaliastudios.autocomplete.AutocompletePresenter;
+
 import java.util.ArrayList;
 import java.util.Locale;
 

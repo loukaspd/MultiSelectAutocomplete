@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.Editable;
@@ -23,6 +25,7 @@ import android.widget.MultiAutoCompleteTextView;
 import com.otaliastudios.autocomplete.Autocomplete;
 import com.otaliastudios.autocomplete.AutocompleteCallback;
 import com.otaliastudios.autocomplete.AutocompletePolicy;
+import com.otaliastudios.autocomplete.AutocompletePresenter.PopupDimensions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +41,9 @@ public class MultiSelectAutocomplete<T>
     private boolean _supportMultiple = false;
     private boolean _showOptionsOnFocus = false;
     private boolean _clearUnmatchedText = false;
+    private float _popupElevation = 1;
+    private Drawable _backgroundDrawable = null;
+    private PopupDimensions _popupDimensions = new PopupDimensions();
 
     //Setters
 
@@ -51,6 +57,22 @@ public class MultiSelectAutocomplete<T>
 
     public void setClearUnmatchedText(boolean clearUnmatchedText) {
         _clearUnmatchedText = clearUnmatchedText;
+    }
+
+    public void setPopupElevation(float elevation) {
+        _popupElevation = elevation;
+    }
+
+    public void setPopupBackground(Drawable drawable) {
+        _backgroundDrawable = drawable;
+    }
+
+    public void setPopupWidth(int width) {
+        _popupDimensions.width = width;
+    }
+
+    public void setPopupHeight(int height) {
+        _popupDimensions.height = height;
     }
     //endregion
 
@@ -208,8 +230,13 @@ public class MultiSelectAutocomplete<T>
 
     private void initializeAutocomplete(ArrayList<T> items) {
         _presenter = new AutocompletePresenter<>(this.getContext(), _ui, items);
+        _presenter.setPopupDimensions(_popupDimensions);
 
-        _autocomplete = Autocomplete.on(this)
+        if (_backgroundDrawable == null) _backgroundDrawable = new ColorDrawable(Color.WHITE);
+
+        _autocomplete = Autocomplete.<T>on(this)
+                .with(_popupElevation)
+                .with(_backgroundDrawable)
                 .with(new AutocompletePolicy() {
                     @Override
                     public boolean shouldShowPopup(Spannable text, int cursorPos) {
@@ -246,7 +273,7 @@ public class MultiSelectAutocomplete<T>
                 .with(this)
                 .build();
 
-        _autocomplete.setGravity(Gravity.END);
+        _autocomplete.setGravity(Gravity.START);
     }
 
     void addItem(T item) {
@@ -433,12 +460,25 @@ public class MultiSelectAutocomplete<T>
                 R.styleable.MultiSelectAutocomplete,
                 0, 0);
 
+        float popupWidth ,popupHeight;
+
         try {
             _supportMultiple = a.getBoolean(R.styleable.MultiSelectAutocomplete_supportMultiple, false);
             _showOptionsOnFocus = a.getBoolean(R.styleable.MultiSelectAutocomplete_showOptionsOnFocus, false);
             _clearUnmatchedText = a.getBoolean(R.styleable.MultiSelectAutocomplete_clearUnmatchedText, false);
+            _popupElevation = a.getFloat(R.styleable.MultiSelectAutocomplete_popupElevation, 1);
+            popupWidth = a.getDimension(R.styleable.MultiSelectAutocomplete_popupWidth, Float.MAX_VALUE);
+            popupHeight = a.getDimension(R.styleable.MultiSelectAutocomplete_popupHeight, Float.MAX_VALUE);
         } finally {
             a.recycle();
+        }
+
+        // Apply popup dimensions
+        if (popupHeight != Float.MAX_VALUE) {
+            _popupDimensions.height = (int) popupHeight;
+        }
+        if (popupWidth != Float.MAX_VALUE) {
+            _popupDimensions.width = (int) popupWidth;
         }
 
         // register textWatcher
