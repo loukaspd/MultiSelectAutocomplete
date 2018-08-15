@@ -41,17 +41,20 @@ class AdapterAutocomplete<T>
     public void removeItem(T item) {
         if (!_items.remove(item)) return;
         applyFiltering(_filter);
+        notifyDataSetChanged();
     }
 
     public void addItem(T item) {
         if (_items.contains(item)) return;
         _items.add(item);
         applyFiltering(_filter);
+        notifyDataSetChanged();
     }
 
     public void setItems(ArrayList<T> items) {
         _items = Helpers.cloneList(items);
         applyFiltering(_filter);
+        notifyDataSetChanged();
     }
 
     //endregion
