@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
@@ -41,6 +42,7 @@ public class MultiSelectAutocomplete<T>
     private boolean _supportMultiple = false;
     private boolean _showOptionsOnFocus = false;
     private boolean _clearUnmatchedText = false;
+    private boolean _showKeyboardOnFocus = false;
     private float _popupElevation = 1;
     private Drawable _backgroundDrawable = null;
     private PopupDimensions _popupDimensions = new PopupDimensions();
@@ -57,6 +59,10 @@ public class MultiSelectAutocomplete<T>
 
     public void setClearUnmatchedText(boolean clearUnmatchedText) {
         _clearUnmatchedText = clearUnmatchedText;
+    }
+
+    public void setShowKeyboardOnFocus(boolean showKeyboardOnFocus) {
+        _showKeyboardOnFocus = showKeyboardOnFocus;
     }
 
     public void setPopupElevation(float elevation) {
@@ -118,7 +124,16 @@ public class MultiSelectAutocomplete<T>
 
     @Override
     protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
-        super.onFocusChanged(focused, direction, previouslyFocusedRect);
+        if (_showKeyboardOnFocus) {
+            super.onFocusChanged(focused, direction, previouslyFocusedRect);
+        }else {
+            // This will prevent keyboard from showing
+            int inputType = this.getInputType();
+            this.setInputType(InputType.TYPE_NULL);
+            super.onFocusChanged(focused, direction, previouslyFocusedRect);
+            this.setInputType(inputType);
+        }
+
 
         // On Focus
         if (focused) {
@@ -470,6 +485,7 @@ public class MultiSelectAutocomplete<T>
             _supportMultiple = a.getBoolean(R.styleable.MultiSelectAutocomplete_supportMultiple, false);
             _showOptionsOnFocus = a.getBoolean(R.styleable.MultiSelectAutocomplete_showOptionsOnFocus, false);
             _clearUnmatchedText = a.getBoolean(R.styleable.MultiSelectAutocomplete_clearUnmatchedText, false);
+            _showKeyboardOnFocus = a.getBoolean(R.styleable.MultiSelectAutocomplete_showKeyboardOnFocus, false);
             _popupElevation = a.getFloat(R.styleable.MultiSelectAutocomplete_popupElevation, 1);
             popupWidth = a.getDimension(R.styleable.MultiSelectAutocomplete_popupWidth, Float.MAX_VALUE);
             popupHeight = a.getDimension(R.styleable.MultiSelectAutocomplete_popupHeight, Float.MAX_VALUE);

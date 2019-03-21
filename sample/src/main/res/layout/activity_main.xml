@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    xmlns:custom="http://schemas.android.com/apk/res-auto">
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+
+    android:focusableInTouchMode="true">
 
     <gr.loukaspd.multiselectautocomplete.MultiSelectAutocomplete
         android:id="@+id/input"
@@ -15,6 +17,7 @@
         custom:supportMultiple="true"
         custom:showOptionsOnFocus="true"
         custom:clearUnmatchedText="true"
+        custom:showKeyboardOnFocus="false"
         custom:popupElevation="6"
         custom:popupWidth="600px"
         />
