@@ -195,6 +195,7 @@ public class MultiSelectAutocomplete<T>
             _tagSpans.clear();
         }
         addItem(item);
+        _autocomplete.dismissPopup();
     }
 
 
