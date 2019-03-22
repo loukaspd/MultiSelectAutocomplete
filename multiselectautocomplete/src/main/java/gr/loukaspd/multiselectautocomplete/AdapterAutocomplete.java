@@ -65,6 +65,8 @@ class AdapterAutocomplete<T>
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // Inflate View
         View view = LayoutInflater.from(parent.getContext()).inflate(_ui.autocompleteLayoutRes(), null);
+        RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        view.setLayoutParams(lp);
         // Create ViewHolder
         final ViewHolderAutocomplete<T> viewHolder = new ViewHolderAutocomplete<>(view);
 
