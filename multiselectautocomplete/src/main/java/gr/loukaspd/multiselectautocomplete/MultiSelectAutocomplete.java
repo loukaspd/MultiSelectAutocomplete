@@ -124,14 +124,14 @@ public class MultiSelectAutocomplete<T>
 
     @Override
     protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
-        if (_showKeyboardOnFocus) {
-            super.onFocusChanged(focused, direction, previouslyFocusedRect);
-        }else {
+        if (!_showKeyboardOnFocus && focused) {
             // This will prevent keyboard from showing
             int inputType = this.getInputType();
             this.setInputType(InputType.TYPE_NULL);
             super.onFocusChanged(focused, direction, previouslyFocusedRect);
             this.setInputType(inputType);
+        }else {
+            super.onFocusChanged(focused, direction, previouslyFocusedRect);
         }
 
 
@@ -233,8 +233,10 @@ public class MultiSelectAutocomplete<T>
      * @param items which will be available for selection
      */
     public void setAutocompleteItems(ArrayList<T> items) {
+        boolean wasPopupShowing =_autocomplete.isPopupShowing();
         clear();
         _presenter.setItems(items);
+        if (!wasPopupShowing) _autocomplete.dismissPopup();
     }
 
 
@@ -344,6 +346,7 @@ public class MultiSelectAutocomplete<T>
 
     private void toggleEnabled(boolean enabled) {
         if (_supportMultiple) return;
+        if (_enabled == enabled) return;
 
         _enabled = enabled;
 

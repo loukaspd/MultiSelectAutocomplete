@@ -49,6 +49,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.clear_selected).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                input.clear();
+            }
+        });
+
         input.setOnSelectedItemsChangedListener(new MultiSelectAutocomplete.OnSelectedItemsChangedListener() {
             @Override
             public void onSelectedItemsChanged() {
