@@ -2,11 +2,8 @@ package gr.loukaspd.multiselectautocomplete;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -292,54 +289,6 @@ public class MultiSelectAutocomplete<T>
         _autocomplete.setGravity(Gravity.START);
     }
 
-    void addItem(T item) {
-        // Create the Ui
-        View view = getView(item);
-        Drawable bd = convertViewToDrawable(view);
-        bd.setBounds(0, 0, bd.getIntrinsicWidth(), bd.getIntrinsicHeight());
-
-        // Initialize the span
-        final MultiSelectEditTextTagSpan span = new MultiSelectEditTextTagSpan(bd, _ui.getItemText(item));
-        span.setItem(item);
-        // Set span position - index
-        int spansSize = _tagSpans.size();
-
-
-        if (spansSize == 0) {
-            span.setIndex(0);
-            span.setPosition(0);
-        }else {
-            span.setIndex(spansSize);
-
-            MultiSelectEditTextTagSpan lastSpan = _tagSpans.get(_tagSpans.size()-1);
-            span.setPosition(lastSpan.getPosition() + lastSpan.getLength() + 1);
-        }
-        _tagSpans.add(span);
-
-        updateText();
-
-        if (_onSelectedItemsChanged != null) {
-            _onSelectedItemsChanged.onSelectedItemsChanged();
-        }
-    }
-
-    private void updateText() {
-        _isAfterTextWatcherEnabled = false;     //disable TextWatcher
-
-        SpannableStringBuilder sb = new SpannableStringBuilder();
-        for (final MultiSelectEditTextTagSpan tagSpan : _tagSpans) {
-            addTagSpan(sb, tagSpan);
-        }
-
-        getText().clear();
-        getText().append(sb);
-        setMovementMethod(LinkMovementMethod.getInstance());
-        setSelection(sb.length());
-
-        _lastString = sb.toString();
-        _isAfterTextWatcherEnabled = true;
-    }
-
     private void toggleEnabled(boolean enabled) {
         if (_options.SupportMultiple) return;
         if (_enabled == enabled) return;
@@ -361,33 +310,83 @@ public class MultiSelectAutocomplete<T>
         updateText();
     }
 
-    //endregion
+    //region Add-Remove Item
 
-    //region AutocompleteCallback
+    void addItem(T item) {
+        MultiSelectEditTextTagSpan spanToAdd = generateTagSpan(item);
+        _tagSpans.add(spanToAdd);
 
-    @Override
-    public boolean onPopupItemClicked(Editable editable, Object item) {
-        addItem((T)item);
-        if (_options.SupportMultiple && _options.ShowOptionsOnFocus) {
-            this.post(new Runnable() {
-                @Override
-                public void run() {
-                    _autocomplete.showPopup("");
-                }
-            });
+        updateText();
+
+        _presenter.removeItem(item);                // stop showing as autocomplete option
+        toggleEnabled(false);                       // can't add more items (if not multiple)
+
+        if (_onSelectedItemsChanged != null) {
+            _onSelectedItemsChanged.onSelectedItemsChanged();
         }
-        return true;
     }
 
-    @Override
-    public void onPopupVisibilityChanged(boolean shown) {
 
+    void removeItem(MultiSelectEditTextTagSpan<T> span, boolean includeSpace) {
+        removeDrawnTagSpan(span, includeSpace);
+
+        _presenter.addItem(span.getItem());         //show item in as autocomplete option
+        toggleEnabled(true);                       // can add more items (if not multiple)
+
+        if (_onSelectedItemsChanged != null) {
+            _onSelectedItemsChanged.onSelectedItemsChanged();
+        }
     }
 
-    //endregion AutocompleteCallback
+    //endregion Add-Remove Item
 
-    //region Add-Remove item
-    private void addTagSpan(SpannableStringBuilder sb, final MultiSelectEditTextTagSpan<T> tagSpan) {
+    //region Draw Text
+
+    private MultiSelectEditTextTagSpan generateTagSpan(T item) {
+        // Create the Ui
+        View view = Helpers.inflateView(getContext(), _ui.selectedItemLayoutRes());
+        _ui.selectedItemUpdateView(view, item);
+        Drawable bd = Helpers.convertViewToDrawable(view, getResources());
+        bd.setBounds(0, 0, bd.getIntrinsicWidth(), bd.getIntrinsicHeight());
+
+        // Initialize the span
+        final MultiSelectEditTextTagSpan span = new MultiSelectEditTextTagSpan(bd, _ui.getItemText(item));
+        span.setItem(item);
+        // Set span position - index
+        int spansSize = _tagSpans.size();
+
+
+        if (spansSize == 0) {
+            span.setIndex(0);
+            span.setPosition(0);
+        }else {
+            span.setIndex(spansSize);
+
+            MultiSelectEditTextTagSpan lastSpan = _tagSpans.get(_tagSpans.size()-1);
+            span.setPosition(lastSpan.getPosition() + lastSpan.getLength() + 1);
+        }
+
+        return span;
+    }
+
+    private void updateText() {
+        _isAfterTextWatcherEnabled = false;     //disable TextWatcher
+
+        SpannableStringBuilder sb = new SpannableStringBuilder();
+        for (final MultiSelectEditTextTagSpan tagSpan : _tagSpans) {
+            addTagSpanToStringBuilder(sb, tagSpan);
+        }
+
+        getText().clear();
+        getText().append(sb);
+        setMovementMethod(LinkMovementMethod.getInstance());
+        setSelection(sb.length());
+
+        _lastString = sb.toString();
+        _isAfterTextWatcherEnabled = true;
+    }
+
+    private void addTagSpanToStringBuilder(SpannableStringBuilder sb, final MultiSelectEditTextTagSpan<T> tagSpan) {
         String source = tagSpan.getSource();
         sb.append(source).append(" ");
         int length = sb.length();
@@ -397,15 +396,12 @@ public class MultiSelectAutocomplete<T>
         sb.setSpan(new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                removeTagSpan(tagSpan, true);
+                removeItem(tagSpan, true);
             }
         }, startSpan, endSpan, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        _presenter.removeItem(tagSpan.getItem());    // stop showing as autocomplete option
-        toggleEnabled(false);                       // can't add more items (if not multiple)
     }
 
-    private void removeTagSpan(MultiSelectEditTextTagSpan<T> span, boolean includeSpace) {
+    private void removeDrawnTagSpan(MultiSelectEditTextTagSpan<T> span, boolean includeSpace) {
         _isAfterTextWatcherEnabled = false;     //disable TextWatcher
 
         int extraLength = includeSpace ? 1 : 0;
@@ -431,44 +427,34 @@ public class MultiSelectAutocomplete<T>
 
 
         _isAfterTextWatcherEnabled = true;
-
-        _presenter.addItem(span.getItem());         //show item in as autocomplete option
-        toggleEnabled(true);                       // can add more items (if not multiple)
-
-        if (_onSelectedItemsChanged != null) {
-            _onSelectedItemsChanged.onSelectedItemsChanged();
-        }
     }
 
-    //endregion Add-Remove item
-
-    //region Ui
-
-    private View getView(T item) {
-        View view = Helpers.inflateView(getContext(), _ui.selectedItemLayoutRes());
-        if (view == null) return null;
-
-        _ui.selectedItemUpdateView(view, item);
-
-        return view;
-    }
-
-    private Drawable convertViewToDrawable(View view) {
-        int spec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-        view.measure(spec, spec);
-        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
-        Bitmap b = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-        Canvas c = new Canvas(b);
-        c.translate(-view.getScrollX(), -view.getScrollY());
-        view.draw(c);
-        view.setDrawingCacheEnabled(true);
-        Bitmap cacheBmp = view.getDrawingCache();
-        Bitmap viewBmp = cacheBmp.copy(Bitmap.Config.ARGB_8888, true);
-        view.destroyDrawingCache();
-        return new BitmapDrawable(getResources(), viewBmp);
-    }
+    //endregion DrawText
 
     //endregion
+
+    //region AutocompleteCallback
+
+    @Override
+    public boolean onPopupItemClicked(Editable editable, Object item) {
+        addItem((T)item);
+        if (_options.SupportMultiple && _options.ShowOptionsOnFocus) {
+            this.post(new Runnable() {
+                @Override
+                public void run() {
+                    _autocomplete.showPopup("");
+                }
+            });
+        }
+        return true;
+    }
+
+    @Override
+    public void onPopupVisibilityChanged(boolean shown) {
+
+    }
+
+    //endregion AutocompleteCallback
 
     //region TextWatcher for Deletion
 
@@ -523,7 +509,7 @@ public class MultiSelectAutocomplete<T>
                     && !_tagSpans.isEmpty()) {
                 MultiSelectEditTextTagSpan toRemoveSpan = _tagSpans.get(_tagSpans.size() - 1);
                 if (toRemoveSpan.getPosition() + toRemoveSpan.getSource().length() == str.length()) {
-                    removeTagSpan(toRemoveSpan, false);
+                    removeItem(toRemoveSpan, false);
                 }
             }
 
