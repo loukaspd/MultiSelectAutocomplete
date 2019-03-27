@@ -26,61 +26,55 @@ import android.widget.MultiAutoCompleteTextView;
 import com.otaliastudios.autocomplete.Autocomplete;
 import com.otaliastudios.autocomplete.AutocompleteCallback;
 import com.otaliastudios.autocomplete.AutocompletePolicy;
-import com.otaliastudios.autocomplete.AutocompletePresenter.PopupDimensions;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import gr.loukaspd.multiselectautocomplete.Interfaces.IMultiSelectUi;
+import gr.loukaspd.multiselectautocomplete.Implementation.MultiSelectAutocompleteOptions;
 
 public class MultiSelectAutocomplete<T>
         extends MultiAutoCompleteTextView
         implements AutocompleteCallback
 {
 
-    //region Settings
-    private boolean _supportMultiple = false;
-    private boolean _showOptionsOnFocus = false;
-    private boolean _clearUnmatchedText = false;
-    private boolean _showKeyboardOnFocus = false;
-    private float _popupElevation = 1;
-    private Drawable _backgroundDrawable = null;
-    private PopupDimensions _popupDimensions = new PopupDimensions();
+    //region Options
+    private MultiSelectAutocompleteOptions _options = new MultiSelectAutocompleteOptions(); 
 
     //Setters
 
     public void setSupportMultiple(boolean supportMultiple) {
-        _supportMultiple = supportMultiple;
+        _options.SupportMultiple = supportMultiple;
     }
 
     public void setShowOptionsOnFocus(boolean showOptionsOnFocus) {
-        _showOptionsOnFocus = showOptionsOnFocus;
+        _options.ShowOptionsOnFocus = showOptionsOnFocus;
     }
 
     public void setClearUnmatchedText(boolean clearUnmatchedText) {
-        _clearUnmatchedText = clearUnmatchedText;
+        _options.ClearUnmatchedText = clearUnmatchedText;
     }
 
     public void setShowKeyboardOnFocus(boolean showKeyboardOnFocus) {
-        _showKeyboardOnFocus = showKeyboardOnFocus;
+        _options.ShowKeyboardOnFocus = showKeyboardOnFocus;
     }
 
     public void setPopupElevation(float elevation) {
-        _popupElevation = elevation;
+        _options.PopupElevation = elevation;
     }
 
     public void setPopupBackground(Drawable drawable) {
-        _backgroundDrawable = drawable;
+        _options.BackgroundDrawable = drawable;
     }
 
     public void setPopupWidth(int width) {
-        _popupDimensions.width = width;
+        _options.PopupDimensions.width = width;
     }
 
     public void setPopupHeight(int height) {
-        _popupDimensions.height = height;
+        _options.PopupDimensions.height = height;
     }
-    //endregion
+    //endregion Settings
 
     //region Class Variables
     private final List<MultiSelectEditTextTagSpan<T>> _tagSpans = new ArrayList<>();
@@ -93,7 +87,7 @@ public class MultiSelectAutocomplete<T>
     private IMultiSelectUi<T> _ui;
     private AutocompletePresenter<T> _presenter;
     private OnSelectedItemsChangedListener _onSelectedItemsChanged;
-    //endregion
+    //endregion Class Variables
 
     //region Constructors
 
@@ -112,7 +106,7 @@ public class MultiSelectAutocomplete<T>
         init(context, attrs);
     }
 
-    //endregion
+    //endregion Constructors
 
     //region EditText Overrides
 
@@ -124,7 +118,7 @@ public class MultiSelectAutocomplete<T>
 
     @Override
     protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
-        if (!_showKeyboardOnFocus && focused) {
+        if (!_options.ShowKeyboardOnFocus && focused) {
             // This will prevent keyboard from showing
             int inputType = this.getInputType();
             this.setInputType(InputType.TYPE_NULL);
@@ -137,20 +131,19 @@ public class MultiSelectAutocomplete<T>
 
         // On Focus
         if (focused) {
-            if (_enabled && _showOptionsOnFocus && _autocomplete != null) {
+            if (_enabled && _options.ShowOptionsOnFocus && _autocomplete != null) {
                 _autocomplete.showPopup(_query);
             }
         }else {
-            if (_clearUnmatchedText) clearUnmatchedText();
+            if (_options.ClearUnmatchedText) clearUnmatchedText();
             _autocomplete.dismissPopup();
         }
     }
 
 
+    //endregion EditText Overrides
 
-    //endregion
-
-    // region Public API
+    //region Public API
 
     /**
      * Initialize the View
@@ -191,7 +184,7 @@ public class MultiSelectAutocomplete<T>
      * @param item the item to add as selected
      */
     public void addSelectedItem(T item) {
-        if (!_supportMultiple) {
+        if (!_options.SupportMultiple) {
             _tagSpans.clear();
         }
         addItem(item);
@@ -222,6 +215,9 @@ public class MultiSelectAutocomplete<T>
      * Remove all (selected) tags from EditText
      */
     public void clear() {
+        for(MultiSelectEditTextTagSpan tagSpan : _tagSpans) {
+            _presenter.addItem((T)tagSpan.getItem());
+        }
         _tagSpans.clear();
         updateText();
         toggleEnabled(true);
@@ -244,23 +240,23 @@ public class MultiSelectAutocomplete<T>
         _onSelectedItemsChanged = listener;
     }
 
-    //endregion
+    //endregion Public API
 
     //region Private Implementation
 
     private void initializeAutocomplete(ArrayList<T> items) {
         _presenter = new AutocompletePresenter<>(this.getContext(), _ui, items);
-        _presenter.setPopupDimensions(_popupDimensions);
+        _presenter.setPopupDimensions(_options.PopupDimensions);
 
-        if (_backgroundDrawable == null) _backgroundDrawable = new ColorDrawable(Color.WHITE);
+        if (_options.BackgroundDrawable == null) _options.BackgroundDrawable = new ColorDrawable(Color.WHITE);
 
         _autocomplete = Autocomplete.<T>on(this)
-                .with(_popupElevation)
-                .with(_backgroundDrawable)
+                .with(_options.PopupElevation)
+                .with(_options.BackgroundDrawable)
                 .with(new AutocompletePolicy() {
                     @Override
                     public boolean shouldShowPopup(Spannable text, int cursorPos) {
-                        return (_showOptionsOnFocus && _enabled) ? true : getQuery(text).length() > 0;
+                        return (_options.ShowOptionsOnFocus && _enabled) ? true : getQuery(text).length() > 0;
                     }
 
                     @Override
@@ -345,7 +341,7 @@ public class MultiSelectAutocomplete<T>
     }
 
     private void toggleEnabled(boolean enabled) {
-        if (_supportMultiple) return;
+        if (_options.SupportMultiple) return;
         if (_enabled == enabled) return;
 
         _enabled = enabled;
@@ -372,7 +368,7 @@ public class MultiSelectAutocomplete<T>
     @Override
     public boolean onPopupItemClicked(Editable editable, Object item) {
         addItem((T)item);
-        if (_supportMultiple && _showOptionsOnFocus) {
+        if (_options.SupportMultiple && _options.ShowOptionsOnFocus) {
             this.post(new Runnable() {
                 @Override
                 public void run() {
@@ -388,7 +384,7 @@ public class MultiSelectAutocomplete<T>
 
     }
 
-    //endregion
+    //endregion AutocompleteCallback
 
     //region Add-Remove item
     private void addTagSpan(SpannableStringBuilder sb, final MultiSelectEditTextTagSpan<T> tagSpan) {
@@ -444,7 +440,7 @@ public class MultiSelectAutocomplete<T>
         }
     }
 
-    //endregion
+    //endregion Add-Remove item
 
     //region Ui
 
@@ -483,26 +479,10 @@ public class MultiSelectAutocomplete<T>
                 R.styleable.MultiSelectAutocomplete,
                 0, 0);
 
-        float popupWidth ,popupHeight;
-
         try {
-            _supportMultiple = a.getBoolean(R.styleable.MultiSelectAutocomplete_supportMultiple, false);
-            _showOptionsOnFocus = a.getBoolean(R.styleable.MultiSelectAutocomplete_showOptionsOnFocus, false);
-            _clearUnmatchedText = a.getBoolean(R.styleable.MultiSelectAutocomplete_clearUnmatchedText, false);
-            _showKeyboardOnFocus = a.getBoolean(R.styleable.MultiSelectAutocomplete_showKeyboardOnFocus, false);
-            _popupElevation = a.getFloat(R.styleable.MultiSelectAutocomplete_popupElevation, 1);
-            popupWidth = a.getDimension(R.styleable.MultiSelectAutocomplete_popupWidth, Float.MAX_VALUE);
-            popupHeight = a.getDimension(R.styleable.MultiSelectAutocomplete_popupHeight, Float.MAX_VALUE);
+            _options.readOptions(a);
         } finally {
             a.recycle();
-        }
-
-        // Apply popup dimensions
-        if (popupHeight != Float.MAX_VALUE) {
-            _popupDimensions.height = (int) popupHeight;
-        }
-        if (popupWidth != Float.MAX_VALUE) {
-            _popupDimensions.width = (int) popupWidth;
         }
 
         // register textWatcher
