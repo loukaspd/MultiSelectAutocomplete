@@ -1,12 +1,15 @@
+[ ![Download](https://api.bintray.com/packages/loukaspd/MultiSelectAutocomplete/MultiSelectAutocomplete/images/download.svg) ](https://bintray.com/loukaspd/MultiSelectAutocomplete/MultiSelectAutocomplete/_latestVersion)
+
 # MultiSelectAutocomplete
 
 EditText with Autocomplete Functionality based on [Autocomplete library](https://github.com/natario1/Autocomplete) that supports customizing how the items will be drawn and Multiple selected items
 
 ```
-    implementation 'gr.loukaspd:multiselectautocomplete:1.2.6'
+    implementation 'gr.loukaspd:multiselectautocomplete:latest'
     implementation 'com.otaliastudios:autocomplete:1.1.0'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
 ```
+**replace with latest version number**
 
 To see it in action, take a look at the sample app in the `sample` module.
 
@@ -78,6 +81,7 @@ You can change view attributes directly from your layout's xml file or in your j
 | showOptionsOnFocus         | showOptionsOnFocus     | boolean     | show the popup with autocomplete options when EditText gets focus                                        |
 | clearUnmatchedText         | clearUnmatchedText     | boolean     | clear all text that is not matched when EditText loses focus                                        |
 | showKeyboardOnFocus         | showKeyboardOnFocus     | boolean     | show the keyboard when EditText gets focus                                        |
+| removeSelectedItem         | removeSelectedItem     | boolean     | when an item is selected it will be removed from options popup                                        |
 | popupElevation         | popupElevation     | float     | sets the elevtion of the autocomplete popup                                        |
 | popupWidth         | popupWidth     | dimension     | set the width of the autocomplete popup window                                        |
 | popupHeight        | popupHeight     | dimension     | set the height of the autocomplete popup window                                        |
