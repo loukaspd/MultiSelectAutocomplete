@@ -318,7 +318,9 @@ public class MultiSelectAutocomplete<T>
 
         updateText();
 
-        _presenter.removeItem(item);                // stop showing as autocomplete option
+        if (_options.RemoveSelectedItem) {
+            _presenter.removeItem(item);    // stop showing as autocomplete option
+        }
         toggleEnabled(false);                       // can't add more items (if not multiple)
 
         if (_onSelectedItemsChanged != null) {

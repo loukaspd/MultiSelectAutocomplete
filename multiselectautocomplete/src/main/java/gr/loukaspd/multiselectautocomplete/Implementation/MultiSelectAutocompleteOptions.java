@@ -12,6 +12,7 @@ public class MultiSelectAutocompleteOptions {
     public boolean ShowOptionsOnFocus = false;
     public boolean ClearUnmatchedText = false;
     public boolean ShowKeyboardOnFocus = false;
+    public boolean RemoveSelectedItem = true;
     public float PopupElevation = 1;
     public Drawable BackgroundDrawable = null;
     public PopupDimensions PopupDimensions = new PopupDimensions();
@@ -22,6 +23,7 @@ public class MultiSelectAutocompleteOptions {
         ShowOptionsOnFocus = a.getBoolean(R.styleable.MultiSelectAutocomplete_showOptionsOnFocus, false);
         ClearUnmatchedText = a.getBoolean(R.styleable.MultiSelectAutocomplete_clearUnmatchedText, false);
         ShowKeyboardOnFocus = a.getBoolean(R.styleable.MultiSelectAutocomplete_showKeyboardOnFocus, false);
+        RemoveSelectedItem = a.getBoolean(R.styleable.MultiSelectAutocomplete_removeSelectedItem, true);
         PopupElevation = a.getFloat(R.styleable.MultiSelectAutocomplete_popupElevation, 1);
         float popupWidth = a.getDimension(R.styleable.MultiSelectAutocomplete_popupWidth, Float.MAX_VALUE);
         float popupHeight = a.getDimension(R.styleable.MultiSelectAutocomplete_popupHeight, Float.MAX_VALUE);

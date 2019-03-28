@@ -18,6 +18,7 @@
         custom:showOptionsOnFocus="true"
         custom:clearUnmatchedText="true"
         custom:showKeyboardOnFocus="false"
+        custom:removeSelectedItem="false"
         custom:popupElevation="6"
         custom:popupWidth="600px"
         />

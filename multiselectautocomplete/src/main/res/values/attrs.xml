@@ -4,6 +4,7 @@
         <attr name="showOptionsOnFocus" format="boolean" />
         <attr name="clearUnmatchedText" format="boolean" />
         <attr name="showKeyboardOnFocus" format="boolean" />
+        <attr name="removeSelectedItem" format="boolean" />
         <attr name="popupElevation"  format="float" />
         <attr name="popupWidth" format="dimension" />
         <attr name="popupHeight" format="dimension" />
